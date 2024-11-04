@@ -1,66 +1,29 @@
-const express = require("express")
-const router = express.Router()
-const db = require("../database")
+const express = require("express");
+const router = express.Router();
+const db = require("../database");
+const {
+  getAllUsers,
+  createNewUser,
+  updateUser,
+  deleteUser,
+} = require("../controllers/usersControllers");
 
-const usersArray = [
-	{
-		userName: "Alice",
-		lastName: "Johnson",
-		age: 30,
-		address: {
-			street: "Oak Avenue",
-			number: 45,
-			house: true,
-		},
-		role: "Software Engineer",
-	},
-	{
-		userName: "Charlie",
-		lastName: "Smith",
-		age: 27,
-		address: {
-			street: "Maple Street",
-			number: 101,
-			house: false,
-		},
-		role: "Project Manager",
-	}
-]
+router.get("/users", getAllUsers);
 
-// GET METHOD
-router.get("/users", (req, res) => {
-    res.json(usersArray)
-})
+router.post("/users", createNewUser);
 
-// POST METHOD
-router.post("/", (req, res) => {
-	const { firstName, lastName } = req.body
+router.put("/users/:id", updateUser);
 
-	res.status(201).json({
-		msg: "This the message from POST ",
-		firstName,
-		lastName,
-	})
-})
+router.delete("/users/:id", deleteUser);
 
-// PUT METHOD
-router.put("/", (req, res) => {
-    const { firstname, lastname } = req.body; 
-    res.json({
-        msg: "This is the message from PUT",
-        firstname,
-        lastname,
-    });
+router.get("/users/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const userId = users.findIndex((user) => user.id === id);
+
+  if (userId < 0) return res.status(404).json({ msg: "user not found" });
+
+  res.json(users[userId]);
 });
 
-// DELETE METHOD
-router.delete("/:id", (req, res) => {
-    const {id} =req.params
-
-	res.json({
-		msg: "This the message from DELETE ",
-        id
-	})
-})
-
-module.exports = router
+module.exports = router;
